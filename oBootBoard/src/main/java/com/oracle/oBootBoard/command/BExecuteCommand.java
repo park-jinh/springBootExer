@@ -48,7 +48,7 @@ public class BExecuteCommand {
 		HttpServletRequest request = (HttpServletRequest)map.get("request");
 		int bId = Integer.parseInt(request.getParameter("bId"));
 		System.out.println("bContentCmd bid->"+bId);
-		BDto board = jdbcDao.contentView(bId);
+		BDto board = jdbcDao.contentView(bId,true);
 		System.out.println("bContentCmd board.getbName"+board.getbName());
 		model.addAttribute("mvc_board", board);
 	}
@@ -64,5 +64,53 @@ public class BExecuteCommand {
 		String bTitle = request.getParameter("bTitle");
 		String bContent = request.getParameter("bContent");
 		jdbcDao.modify(bId,bName,bTitle,bContent);
+	}
+
+	public void bReplyViewCmd(Model model) {
+//		  1)  model이용 , map 선언
+//		  2) request 이용 ->  bid  추출
+//		  3) reply_view method 이용하여 (bid)
+//		    - BDto dto = dao.reply_view(bId);
+		System.out.println("bReplyViewCmd start...");
+		Map<String, Object> map = model.asMap();
+		HttpServletRequest request = (HttpServletRequest)map.get("request");
+		int bId = Integer.parseInt(request.getParameter("bId"));
+		BDto dto = jdbcDao.reply_view(bId);
+		model.addAttribute("reply_view", dto);
+	}
+
+	public void bReplyCmd(Model model) {
+//		  1)  model이용 , map 선언
+//		  2) request 이용 -> bid,         bName ,  bTitle,
+//		                    bContent ,  bGroup , bStep ,
+//		                    bIndent 추출
+//		  3) reply method 이용하여 댓글저장 
+//		    - dao.reply(bId, bName, bTitle, bContent, bGroup, bStep, bIndent);
+//		    [1] bId SEQUENCE = bGroup 
+//		    [2] bName, bTitle, bContent -> request Value
+//		    [3] 홍해 기적
+//		    [4] bStep / bIndent   + 1
+		System.out.println("bReplyCmd");
+		Map<String, Object> map = model.asMap();
+		HttpServletRequest request = (HttpServletRequest)map.get("request");
+		int bId = Integer.parseInt(request.getParameter("bId"));
+		String bName = request.getParameter("bName");
+		String bTitle = request.getParameter("bTitle");
+		String bContent = request.getParameter("bContent");
+		int bGroup = Integer.parseInt(request.getParameter("bGroup"));
+		int bStep = Integer.parseInt(request.getParameter("bStep"));
+		int bIndent = Integer.parseInt(request.getParameter("bIndent"));
+		System.out.println("bReplyCmd bTitle->"+bTitle);
+		jdbcDao.reply(bId,bName,bTitle,bContent,bGroup,bStep,bIndent);
+	}
+
+	public void bDeleteCmd(Model model) {
+		// 	 1)  model이용 , map 선언
+	    //	 2) request 이용 ->  bId 추출
+	    //	 3)  delete method 이용하여 삭제
+		Map<String, Object> map = model.asMap();
+		HttpServletRequest request = (HttpServletRequest) map.get("request");
+		int bId = Integer.parseInt(request.getParameter("bId"));
+		jdbcDao.delete(bId);
 	}
 }

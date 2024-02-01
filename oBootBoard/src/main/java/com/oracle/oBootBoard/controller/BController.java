@@ -65,4 +65,32 @@ public class BController {
 		return "redirect:list";
 	}
 	
+	@RequestMapping("/reply_view")
+	public String reply_view(HttpServletRequest request, Model model) {
+		System.out.println("reply_view start...");
+		
+		model.addAttribute("request",request);
+		bExecuteCommand.bReplyViewCmd(model);
+		return "reply_view";
+	}
+	
+	@RequestMapping(value = "/reply", method = RequestMethod.POST)
+	public String reply(HttpServletRequest request, Model model) {
+		System.out.println("reply()");
+		
+		model.addAttribute("request", request);
+		bExecuteCommand.bReplyCmd(model);
+		
+		return "redirect:list";
+	}
+	
+	@RequestMapping("/delete")
+	public String delete(HttpServletRequest request, Model model) {
+		System.out.println("delete()");
+		
+		model.addAttribute("request", request);
+		bExecuteCommand.bDeleteCmd(model);
+		
+		return "redirect:list";
+	}
 }
